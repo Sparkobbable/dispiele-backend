@@ -1,0 +1,61 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Build, publish and deploy java backend
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: sparkobbable/dispiele-backend:latest
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up JDK 17
+              uses: actions/setup-java@v3
+              with:
+                  java-version: "17"
+                  distribution: "temurin"
+                  cache: maven
+            - name: Build with Maven
+              run: mvn -B package --file pom.xml
+    publish:
+        name: publish image
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Login
+              run: |
+                  echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            - name: Build and Publish
+              run: |
+                  docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    deploy:
+        needs: publish
+        name: deploy image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: add cloudflared
+              uses: debugci/setup-cloudflared@v1
+            - name: setup connector
+              run: sudo cloudflared service install ${{secrets.CLOUDFLARED_TUNNEL_TOKEN}}
+            - name: install id rsa
+              # check this thread to understand why its needed:
+              # <https://stackoverflow.com/a/70447517>
+              run: install -m 600 -D /dev/null ~/.ssh/id_rsa
+            - name: write private key
+              run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            - name: config ssh
+              run: echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
+            - name: connect and pull
+              run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }}/diSpiele-platform && git pull && docker compose down --rmi all && docker compose up -d && exit"
+            - name: cleanup
+              run: rm -rf ~/.ssh
