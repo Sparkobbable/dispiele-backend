@@ -10,15 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.spielemanufaktur.backend.controller.OrderController.OrderDTO.GENDER;
+import de.spielemanufaktur.backend.controller.dtos.OrderDTO;
+import de.spielemanufaktur.backend.controller.dtos.OrderDTO.GENDER;
 import de.spielemanufaktur.backend.model.Customer;
 import de.spielemanufaktur.backend.model.Order;
 import de.spielemanufaktur.backend.repositories.CustomerRepository;
 import de.spielemanufaktur.backend.repositories.OrderRepository;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -70,36 +71,6 @@ public class OrderController {
                 return 0;
             default:
                 return 0;
-        }
-    }
-
-    @Getter
-    public class OrderDTO {
-        private Long itemId;
-        @NotNull
-        private String email;
-        @NotNull
-        private GENDER gender;
-        @NotNull
-        private String firstName;
-        @NotNull
-        private String surename;
-        private String company;
-        @NotNull
-        private String adressline;
-        @NotNull
-        private String postalCode;
-        @NotNull
-        private String city;
-        @NotNull
-        private String country;
-        private String phoneNumer;
-        @NotNull
-        private Integer quantity;
-        private String comment;
-
-        public enum GENDER {
-            M, W, D, U
         }
     }
 }
