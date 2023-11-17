@@ -60,6 +60,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -69,7 +75,8 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
-						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
+						<builder>
+							paketobuildpacks/builder-jammy-base:latest</builder>
 					</image>
 				</configuration>
 			</plugin>

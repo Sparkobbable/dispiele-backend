@@ -7,9 +7,6 @@ spring:
             ddl-auto: none
             show-sql: true
     datasource:
-        url: jdbc:postgres://db:5432/postgres
-        username: postgres
-        password: admin
         driver-class-name: org.postgresql.Driver
 springdoc:
     swagger-ui:

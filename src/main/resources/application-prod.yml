@@ -1,0 +1,18 @@
+spring:
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: none
+            show-sql: true
+    datasource:
+        url: jdbc:postgresql://db:5050/dispiele
+        driver-class-name: org.postgresql.Driver
+springdoc:
+    swagger-ui:
+        path: /api/v1/swagger
+    api-docs:
+        path: /api/v1/api-docs
+server:
+    port: 8080
