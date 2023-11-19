@@ -34,7 +34,7 @@ public class OrderController {
 
     @PostMapping("/new")
     ResponseEntity<Long> createOrder(@RequestBody OrderDTO request) {
-        Customer customer = new Customer();
+        Customer customer = new Customer(); // todo check if customer exists
         customer.setEmail(request.getEmail());
         customer.setGender(getValueByGender(request.getGender()));
         customer.setFirstName(request.getFirstName());
