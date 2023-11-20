@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class OrderDTO implements Serializable {
     private Long itemId;
     @NotNull
