@@ -18,7 +18,7 @@ public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
-    @GetMapping("/latest")
+    @GetMapping(value = "/latest", produces = "application/json")
     public ResponseEntity<ItemDTO> getLatestAvailableItem() {
         Item latestItem = itemRepository.findFirstByOrderByIdDesc();
         if (latestItem != null) {
