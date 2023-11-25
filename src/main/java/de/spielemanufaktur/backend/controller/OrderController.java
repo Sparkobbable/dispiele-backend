@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import de.spielemanufaktur.backend.model.Customer;
 import de.spielemanufaktur.backend.model.Order;
 import de.spielemanufaktur.backend.repositories.CustomerRepository;
 import de.spielemanufaktur.backend.repositories.OrderRepository;
+import de.spielemanufaktur.backend.services.MailService;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -31,6 +33,9 @@ public class OrderController {
 
     @Autowired
     private CustomerRepository customers;
+
+    @Autowired
+    private MailService mail;
 
     @PostMapping("/new")
     ResponseEntity<Long> createOrder(@RequestBody OrderDTO request) {
@@ -56,7 +61,29 @@ public class OrderController {
         order.setPayed(false);
         order.setShipped(false);
         Order savedOrder = orders.save(order);
+        mail.sendMail(String.format("[BESTELLUNG] Bestellung #%s ist eingegangen", savedOrder.getId()), String.format(
+                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nTelefonnummer: %s%n",
+                savedOrder.getId(),
+                order.getQuantity(), order.getItemId(), order.getOrderDate().toGMTString(),
+                order.getOrderTime().toGMTString(), order.getComment(), getAnredeByValue(customer.getGender()),
+                customer.getFirstName(), customer.getSurname(), customer.getCompany(), customer.getAddressLine(),
+                customer.getPostalCode(), customer.getCity(), customer.getCountry(), customer.getPhoneNumber()));
         return new ResponseEntity<>(savedOrder.getId(), HttpStatus.CREATED);
+    }
+
+    private String getAnredeByValue(Integer gender) {
+        switch (gender) {
+            case 1:
+                return "Herr";
+            case 2:
+                return "Frau";
+            case 3:
+                return "Neutrale Anrede";
+            case 0:
+                return "Keine Angabe";
+            default:
+                return null;
+        }
     }
 
     private Integer getValueByGender(GENDER g) {

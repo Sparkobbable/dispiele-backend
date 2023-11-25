@@ -27,5 +27,7 @@ springdoc:
         path: /api/v1/swagger
     api-docs:
         path: /api/v1/api-docs
+business:
+    email: test@test.com
 server:
     port: 8080
