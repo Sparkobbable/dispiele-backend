@@ -11,6 +11,17 @@ spring:
         username: your_username
         password: your_password
         driver-class-name: org.postgresql.Driver
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: your_username
+        password: your_password
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
 springdoc:
     swagger-ui:
         path: /api/v1/swagger
