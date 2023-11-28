@@ -20,8 +20,6 @@ public class MailService {
         return new JavaMailSenderImpl();
     }
 
-}
-
     public void sendMail(String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailTo);
