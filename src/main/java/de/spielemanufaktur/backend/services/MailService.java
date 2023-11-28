@@ -15,11 +15,6 @@ public class MailService {
     @Value("${business.email}")
     private String emailTo;
 
-    @Bean
-    public JavaMailSenderImpl mailSender() {
-        return new JavaMailSenderImpl();
-    }
-
     public void sendMail(String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailTo);
