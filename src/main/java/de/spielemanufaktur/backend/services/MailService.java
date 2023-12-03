@@ -7,7 +7,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.log4j.Log4j2;
+
 @Component
+@Log4j2
 public class MailService {
     @Autowired
     private JavaMailSenderImpl mail;
