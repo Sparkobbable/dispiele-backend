@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,22 +41,29 @@ public class OrderController {
 
     @PostMapping("/new")
     ResponseEntity<Long> createOrder(@RequestBody OrderDTO request) {
-        Customer customer = new Customer(); // todo check if customer exists
-        customer.setEmail(request.getEmail());
-        customer.setGender(getValueByGender(request.getGender()));
-        customer.setFirstName(request.getFirstName());
-        customer.setSurname(request.getSurename());
-        customer.setCompany(request.getCompany());
-        customer.setAddressLine(request.getAdressline());
-        customer.setPostalCode(request.getPostalCode());
-        customer.setCity(request.getCity());
-        customer.setCountry(request.getCountry());
-        customer.setPhoneNumber(request.getPhoneNumer());
-        Customer savedCustomer = customers.save(customer);
+        Optional<Customer> existingCustomer = customers.findByEmailAndAddressLine(request.getEmail(),
+                request.getAdressline());
+        Customer customer = null;
+        if (existingCustomer.isEmpty()) {
+            customer = new Customer();
+            customer.setEmail(request.getEmail());
+            customer.setGender(getValueByGender(request.getGender()));
+            customer.setFirstName(request.getFirstName());
+            customer.setSurname(request.getSurename());
+            customer.setCompany(request.getCompany());
+            customer.setAddressLine(request.getAdressline());
+            customer.setPostalCode(request.getPostalCode());
+            customer.setCity(request.getCity());
+            customer.setCountry(request.getCountry());
+            customer.setPhoneNumber(request.getPhoneNumer());
+            customer = customers.save(customer);
+        } else {
+            customer = existingCustomer.get();
+        }
         Order order = new Order();
         order.setQuantity(request.getQuantity());
         order.setItemId(request.getItemId());
-        order.setCustomerId(savedCustomer.getId());
+        order.setCustomerId(customer.getId());
         LocalDate orderDate = LocalDate.now();
         order.setOrderDate(Date.valueOf(orderDate));
         LocalTime orderTime = LocalTime.now();
