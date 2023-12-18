@@ -31,7 +31,5 @@ business:
     email: test@test.com
 captcha:
     apikey: 12345f
-    sitekey: 12345f
-    url: https://google.com
 server:
     port: 8080
