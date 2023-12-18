@@ -75,6 +75,7 @@ public class OrderController {
         LocalTime orderTime = LocalTime.now();
         order.setOrderTime(Time.valueOf(orderTime));
         order.setComment(request.getComment());
+        order.setFoundBy(request.getFoundBy());
         order.setPayed(false);
         order.setShipped(false);
         Order savedOrder = orders.save(order);

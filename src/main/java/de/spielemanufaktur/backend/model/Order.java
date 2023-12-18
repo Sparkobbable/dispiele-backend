@@ -34,6 +34,9 @@ public class Order {
     @Column(name = "COMMENT", length = 500)
     private String comment;
 
+    @Column(name = "FOUND_BY")
+    private String foundBy;
+
     @Column(name = "PAYED", nullable = false)
     private boolean payed;
 
