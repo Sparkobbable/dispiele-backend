@@ -36,7 +36,7 @@ jobs:
                   echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             - name: Build and Publish
               run: |
-                  docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --build-arg STAGE=prod --build-arg BUSINESS_EMAIL=${{ secrets.DI_MAIL_PROD }} --build-arg CAPTCHAAPIKEY=${{ secrets.CATPCHAAPIKEY }}
+                  docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --build-arg STAGE=prod --build-arg BUSINESS_EMAIL=${{ secrets.DI_MAIL_PROD }} --build-arg CAPTCHAAPIKEY=${{ secrets.CAPTCHAAPIKEY }}
                   docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
     deploy:
         needs: publish
