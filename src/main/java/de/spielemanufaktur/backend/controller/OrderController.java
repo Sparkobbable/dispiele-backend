@@ -85,11 +85,12 @@ public class OrderController {
         order.setShipped(false);
         Order savedOrder = orders.save(order);
         mail.sendMail(String.format("[BESTELLUNG] Bestellung #%s ist eingegangen", savedOrder.getId()), String.format(
-                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nTelefonnummer: %s%n",
+                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%nAufmerksam geworden durch: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nTelefonnummer: %s%n",
                 savedOrder.getId(),
                 order.getQuantity(), order.getItemId(), orderDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
                 orderTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                 order.getComment() != null ? order.getComment() : "-",
+                order.getFoundBy() != null ? order.getFoundBy() : "-",
                 getAnredeByValue(customer.getGender()),
                 customer.getFirstName(), customer.getSurname(),
                 customer.getCompany() != null ? customer.getCompany() : "-", customer.getAddressLine(),
