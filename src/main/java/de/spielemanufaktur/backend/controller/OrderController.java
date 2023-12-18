@@ -25,6 +25,7 @@ import de.spielemanufaktur.backend.repositories.CustomerRepository;
 import de.spielemanufaktur.backend.repositories.OrderRepository;
 import de.spielemanufaktur.backend.services.CaptchaService;
 import de.spielemanufaktur.backend.services.MailService;
+import de.spielemanufaktur.backend.services.CaptchaService.ReCaptchaInvalidException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -45,7 +46,11 @@ public class OrderController {
 
     @PostMapping("/new")
     ResponseEntity<Long> createOrder(@RequestBody OrderDTO request) {
-        // captcha.checkCaptcha(request.getCaptchaToken());
+        try {
+            captcha.checkCaptcha(request.getCaptchaToken());
+        } catch (ReCaptchaInvalidException e) {
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        }
 
         Optional<Customer> existingCustomer = customers.findByEmailAndAddressLine(request.getEmail(),
                 request.getAdressline());
