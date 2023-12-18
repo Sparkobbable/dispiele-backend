@@ -25,6 +25,7 @@ import de.spielemanufaktur.backend.repositories.CustomerRepository;
 import de.spielemanufaktur.backend.repositories.OrderRepository;
 import de.spielemanufaktur.backend.services.CaptchaService;
 import de.spielemanufaktur.backend.services.MailService;
+import de.spielemanufaktur.backend.services.CaptchaService.ReCaptchaInvalidException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -45,7 +46,11 @@ public class OrderController {
 
     @PostMapping("/new")
     ResponseEntity<Long> createOrder(@RequestBody OrderDTO request) {
-        // captcha.checkCaptcha(request.getCaptchaToken());
+        try {
+            captcha.checkCaptcha(request.getCaptchaToken());
+        } catch (ReCaptchaInvalidException e) {
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        }
 
         Optional<Customer> existingCustomer = customers.findByEmailAndAddressLine(request.getEmail(),
                 request.getAdressline());
@@ -75,15 +80,17 @@ public class OrderController {
         LocalTime orderTime = LocalTime.now();
         order.setOrderTime(Time.valueOf(orderTime));
         order.setComment(request.getComment());
+        order.setFoundBy(request.getFoundBy());
         order.setPayed(false);
         order.setShipped(false);
         Order savedOrder = orders.save(order);
         mail.sendMail(String.format("[BESTELLUNG] Bestellung #%s ist eingegangen", savedOrder.getId()), String.format(
-                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nTelefonnummer: %s%n",
+                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%nAufmerksam geworden durch: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nTelefonnummer: %s%n",
                 savedOrder.getId(),
                 order.getQuantity(), order.getItemId(), orderDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
                 orderTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                 order.getComment() != null ? order.getComment() : "-",
+                order.getFoundBy() != null ? order.getFoundBy() : "-",
                 getAnredeByValue(customer.getGender()),
                 customer.getFirstName(), customer.getSurname(),
                 customer.getCompany() != null ? customer.getCompany() : "-", customer.getAddressLine(),

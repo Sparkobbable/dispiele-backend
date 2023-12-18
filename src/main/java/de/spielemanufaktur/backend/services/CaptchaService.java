@@ -18,6 +18,7 @@ public class CaptchaService {
     public void checkCaptcha(String token) {
         boolean isValid = new ReCaptcha(apiKey).isValid(token);
         if (!isValid) {
+            log.error("Token {} is invalid!", token);
             throw new ReCaptchaInvalidException();
         }
     }
