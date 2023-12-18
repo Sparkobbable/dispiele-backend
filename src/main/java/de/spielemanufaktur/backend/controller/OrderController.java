@@ -23,6 +23,7 @@ import de.spielemanufaktur.backend.model.Customer;
 import de.spielemanufaktur.backend.model.Order;
 import de.spielemanufaktur.backend.repositories.CustomerRepository;
 import de.spielemanufaktur.backend.repositories.OrderRepository;
+import de.spielemanufaktur.backend.services.CaptchaService;
 import de.spielemanufaktur.backend.services.MailService;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -39,8 +40,13 @@ public class OrderController {
     @Autowired
     private MailService mail;
 
+    @Autowired
+    private CaptchaService captcha;
+
     @PostMapping("/new")
     ResponseEntity<Long> createOrder(@RequestBody OrderDTO request) {
+        // captcha.checkCaptcha(request.getCaptchaToken());
+
         Optional<Customer> existingCustomer = customers.findByEmailAndAddressLine(request.getEmail(),
                 request.getAdressline());
         Customer customer = null;

@@ -29,5 +29,8 @@ springdoc:
         path: /api/v1/swagger
     api-docs:
         path: /api/v1/api-docs
+captcha:
+    sitekey: 6LcbgCQpAAAAAKtsrSmoRiBuMJCvQWdRpi9fKsT6
+    url: https://recaptchaenterprise.googleapis.com/v1/projects/di-spiele-1701605792473/assessments?key=
 server:
     port: 8080

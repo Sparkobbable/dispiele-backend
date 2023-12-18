@@ -32,6 +32,9 @@ public class OrderDTO implements Serializable {
     private Integer quantity;
     private String comment;
 
+    // @NotNull
+    // private String captchaToken;
+
     public enum GENDER {
         M, W, D, U
     }
