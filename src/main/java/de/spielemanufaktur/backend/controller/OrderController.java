@@ -66,7 +66,7 @@ public class OrderController {
             customer.setPostalCode(request.getPostalCode());
             customer.setCity(request.getCity());
             customer.setCountry(request.getCountry());
-            customer.setPhoneNumber(request.getPhoneNumer());
+            customer.setPhoneNumber(request.getPhoneNumber());
             customer = customers.save(customer);
         } else {
             customer = existingCustomer.get();
@@ -85,7 +85,7 @@ public class OrderController {
         order.setShipped(false);
         Order savedOrder = orders.save(order);
         mail.sendMail(String.format("[BESTELLUNG] Bestellung #%s ist eingegangen", savedOrder.getId()), String.format(
-                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%nAufmerksam geworden durch: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nTelefonnummer: %s%n",
+                "Hi!%nEs ist eine Bestellung mit der Nummer #%s eingegangen.%n%nBestelldaten:%nAnzahl: %s%nItem-ID: %s%nBestelldatum: %s%nBestellzeit: %s%nBemerkung des Kund*in: %s%nAufmerksam geworden durch: %s%n%nFolgendes sind die Daten der/des Kund*in:%nAnrede: %s%nVorname: %s%nNachname: %s%nUnternehmen: %s%nAdresse: %s%nPostleitzahl: %s%nStadt: %s%nLand: %s%nE-Mail: %s%nTelefonnummer: %s%n",
                 savedOrder.getId(),
                 order.getQuantity(), order.getItemId(), orderDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
                 orderTime.format(DateTimeFormatter.ofPattern("HH:mm")),
@@ -95,6 +95,7 @@ public class OrderController {
                 customer.getFirstName(), customer.getSurname(),
                 customer.getCompany() != null ? customer.getCompany() : "-", customer.getAddressLine(),
                 customer.getPostalCode(), customer.getCity(), customer.getCountry(),
+                customer.getEmail(),
                 customer.getPhoneNumber() != null ? customer.getPhoneNumber() : "-"));
         return new ResponseEntity<>(savedOrder.getId(), HttpStatus.CREATED);
     }

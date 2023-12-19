@@ -27,7 +27,7 @@ public class OrderDTO implements Serializable {
     private String city;
     @NotNull
     private String country;
-    private String phoneNumer;
+    private String phoneNumber;
     @NotNull
     private Integer quantity;
     private String comment;
