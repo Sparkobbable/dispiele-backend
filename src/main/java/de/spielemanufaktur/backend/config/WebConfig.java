@@ -11,7 +11,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("http://localhost:3000",
-                "https://deutschirischespielemanufaktur.com", "https://dev.deutschirischespielemanufaktur.com")
+                "https://deutschirischespielemanufaktur.com", "https://dev.deutschirischespielemanufaktur.com",
+                "https://www.deutschirischespielemanufaktur.com")
                 .allowedHeaders("*").allowedMethods("*");
     }
 }
