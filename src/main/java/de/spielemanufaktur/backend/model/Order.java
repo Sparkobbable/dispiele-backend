@@ -3,8 +3,8 @@ package de.spielemanufaktur.backend.model;
 import lombok.Data;
 
 import jakarta.persistence.*;
-import java.util.Date;
 import java.util.List;
+import java.sql.Date;
 import java.sql.Time;
 
 @Data

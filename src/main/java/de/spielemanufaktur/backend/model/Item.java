@@ -3,7 +3,11 @@ package de.spielemanufaktur.backend.model;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.util.List;
+
+import org.hibernate.type.descriptor.jdbc.NumericJdbcType;
 
 @Data
 @Entity
@@ -18,7 +22,7 @@ public class Item {
     private String displayName;
 
     @Column(name = "PRICE", nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "STOCK")
     private Integer stock;
